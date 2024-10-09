@@ -31,7 +31,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ประวัติการคำนวณ'),
+        title: Text('ประวัติการคำนวณ',style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 27,
+                    fontWeight: FontWeight.bold,),)
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _firestore.collection('carbonCalculations').where('userId', isEqualTo: _auth.currentUser?.uid).orderBy('date', descending: true).snapshots(),

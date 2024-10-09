@@ -377,11 +377,10 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          // วางข้อความด้านบนสุดของหน้าจอ
           Container(
             padding: const EdgeInsets.all(10),
             width: double.infinity,
-            color: const Color.fromARGB(255, 255, 255, 255), // พื้นหลังสีเขียว
+            color: const Color.fromARGB(255, 255, 255, 255), 
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -389,7 +388,7 @@ class HomeScreen extends StatelessWidget {
                   'ยินดีต้อนรับสู่ Carbon Footprint',
                   style: TextStyle(
                     color: Colors.black,
-                    fontSize: 24,
+                    fontSize: 27,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -422,7 +421,7 @@ class HomeScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(height: 28), // เพิ่มช่องว่าง
+                    SizedBox(height: 10), // เพิ่มช่องว่าง
                     Expanded(
                       child: GridView.count(
                         crossAxisCount: 2,
