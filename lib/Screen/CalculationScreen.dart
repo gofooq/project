@@ -40,12 +40,12 @@ class _CalculationScreenState extends State<CalculationScreen> {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  
 
   void _calculateAll() {
     print('Calculating all values...');
     setState(() {
-      double electricityValue = double.tryParse(_electricityController.text) ?? 0;
+      double electricityValue =
+          double.tryParse(_electricityController.text) ?? 0;
       double unit = double.tryParse(_unit.text) ?? 1;
       double busValue = double.tryParse(_busController.text) ?? 0;
       double taxiValue = double.tryParse(_taxiController.text) ?? 0;
@@ -54,62 +54,79 @@ class _CalculationScreenState extends State<CalculationScreen> {
       double motorcycleValue = double.tryParse(_motorcycleController.text) ?? 0;
       double vanValue = double.tryParse(_vanController.text) ?? 0;
       double trainValue = double.tryParse(_trainController.text) ?? 0;
-      double airplaneController1Value = double.tryParse(_airplaneController1.text) ?? 0;
-      double airplaneController2Value = double.tryParse(_airplaneController2.text) ?? 0;
+      double airplaneController1Value =
+          double.tryParse(_airplaneController1.text) ?? 0;
+      double airplaneController2Value =
+          double.tryParse(_airplaneController2.text) ?? 0;
       double boatValue = double.tryParse(_boatController.text) ?? 0;
       double daysValue = double.tryParse(_daysController.text) ?? 0;
       double beerValue = double.tryParse(_beerController.text) ?? 0;
       double coffeeValue = double.tryParse(_coffeeController.text) ?? 0;
       double milkValue = double.tryParse(_milkController.text) ?? 0;
       double fruitjuice = double.tryParse(_fruitjuiceController.text) ?? 0;
-      
+
       //การคำนวณคาร์บอนของการใช้ไฟฟ้า
-      double electricityCarbon = ((electricityValue/unit) * 0.6933);
-      double electricity = (electricityValue/unit);
+      double electricityCarbon = ((electricityValue / unit) * 0.6933);
+      double electricity = (electricityValue / unit);
 
       //การคำนวณคาร์บอนของการเดินทาง
-      double totalTravelCO2 = ( (busValue * 2.850) + 
-          ((taxiValue / 14.763) *2.1896 ) +
-          ((car1Value / 14.763) *2.1896 ) +
-          ((car2Value / 14.763) *2.7446 ) +
-          ((motorcycleValue / 37.640 )*2.1896) +
+      double totalTravelCO2 = ((busValue * 2.850) +
+          ((taxiValue / 14.763) * 2.1896) +
+          ((car1Value / 14.763) * 2.1896) +
+          ((car2Value / 14.763) * 2.7446) +
+          ((motorcycleValue / 37.640) * 2.1896) +
           (vanValue * 10.204) +
           (trainValue * 0.1111) +
           (airplaneController1Value * 0.1733) +
           (airplaneController2Value * 0.1143) +
-          (boatValue * 0.0446) );
-      
-      double totalTravel = (busValue + taxiValue + car1Value + car2Value + motorcycleValue + vanValue + trainValue + airplaneController2Value + airplaneController2Value + boatValue);
+          (boatValue * 0.0446));
+
+      double totalTravel = (busValue +
+          taxiValue +
+          car1Value +
+          car2Value +
+          motorcycleValue +
+          vanValue +
+          trainValue +
+          airplaneController2Value +
+          airplaneController2Value +
+          boatValue);
 
       // การคำนวณคาร์บอนของอาหาร
-      double foodCO2 = (daysValue * 1.65) + 
-        (beerValue * 0.3614) +
-        ((coffeeValue *240) *  0.009) +
-        ((milkValue * 240) * 0.0027) +
-        ((fruitjuice * 240) * 0.005); 
-
+      double foodCO2 = (daysValue * 1.65) +
+          (beerValue * 0.3614) +
+          ((coffeeValue * 240) * 0.009) +
+          ((milkValue * 240) * 0.0027) +
+          ((fruitjuice * 240) * 0.005);
 
       //ค่ารวมของคาร์บอนแต่ละชนิด
       _totalTravel = 'ระยะทาง: ${totalTravel.toDouble()} กิโลเมตร';
-      _travelResult = 'การเดินทาง: ${totalTravelCO2.toStringAsFixed(3)} กก. CO2';
+      _travelResult =
+          'การเดินทาง: ${totalTravelCO2.toStringAsFixed(3)} กก. CO2';
       _foodResult = 'การบริโภคอาหาร: ${foodCO2.toStringAsFixed(3)} กก. CO2';
-      _electricityResult = 'การใช้ไฟฟ้า: ${(electricityCarbon.toStringAsFixed(3))} กก. CO2';
+      _electricityResult =
+          'การใช้ไฟฟ้า: ${(electricityCarbon.toStringAsFixed(3))} กก. CO2';
       _electricity = 'การใช้ไฟฟ้า: ${(electricity)} unit';
       // บันทึกข้อมูลลง Firestore
-      _saveDataToFirebase(electricityCarbon, totalTravelCO2, foodCO2,);
+      _saveDataToFirebase(
+        electricityCarbon,
+        totalTravelCO2,
+        foodCO2,
+      );
     });
   }
 
-  void _saveDataToFirebase(double electricityCarbon, double travelCO2, double foodCO2) async {
+  void _saveDataToFirebase(
+      double electricityCarbon, double travelCO2, double foodCO2) async {
     User? user = _auth.currentUser;
     if (user != null) {
       try {
-        double totalCarbon = (electricityCarbon ) + travelCO2 + foodCO2;
-        
+        double totalCarbon = (electricityCarbon) + travelCO2 + foodCO2;
+
         // DateTime now = DateTime.now();
 
         // String formattedTime = DateFormat('HH:mm').format(now);
-        
+
         // สร้าง document ใหม่ใน Firestore
         await _firestore.collection('carbonCalculations').add({
           'userId': user.uid,
@@ -121,13 +138,13 @@ class _CalculationScreenState extends State<CalculationScreen> {
         });
         await _firestore.collection('Travel Activity').add({
           'userId': user.uid,
-          'distance':_totalTravel,
+          'distance': _totalTravel,
           'travelCarbon Amount': travelCO2.toStringAsFixed(3),
           'date': FieldValue.serverTimestamp(),
         });
         await _firestore.collection('electricity Activity').add({
           'userId': user.uid,
-          'unit':_electricity,
+          'unit': _electricity,
           'electricityCarbon Amount': electricityCarbon.toStringAsFixed(3),
           'date': FieldValue.serverTimestamp(),
         });
@@ -136,9 +153,9 @@ class _CalculationScreenState extends State<CalculationScreen> {
           'foodCarbon Amount': foodCO2.toStringAsFixed(3),
           'date': FieldValue.serverTimestamp(),
         });
-      //   print('Data saved successfully');
-       } catch (e) {
-      // //   print('Failed to save data: $e');
+        //   print('Data saved successfully');
+      } catch (e) {
+        // //   print('Failed to save data: $e');
       }
     }
   }
@@ -207,8 +224,9 @@ class _CalculationScreenState extends State<CalculationScreen> {
             controller: _electricityController,
             keyboardType: TextInputType.number,
             inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')), // ใส่เฉพาะตัวเลขและจุดทศนิยม
-                      ],
+              FilteringTextInputFormatter.allow(
+                  RegExp(r'^\d+\.?\d{0,2}')), // ใส่เฉพาะตัวเลขและจุดทศนิยม
+            ],
             decoration: InputDecoration(
               labelText: 'ค่าไฟ (เดือน)',
               border: OutlineInputBorder(),
@@ -216,14 +234,16 @@ class _CalculationScreenState extends State<CalculationScreen> {
             ),
             style: TextStyle(fontSize: 16),
           ),
+          SizedBox(height: 16),
           TextField(
             controller: _unit,
             keyboardType: TextInputType.number,
             inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')), // ใส่เฉพาะตัวเลขและจุดทศนิยม
-                      ],
+              FilteringTextInputFormatter.allow(
+                  RegExp(r'^\d+\.?\d{0,2}')), // ใส่เฉพาะตัวเลขและจุดทศนิยม
+            ],
             decoration: InputDecoration(
-              labelText:( 'ค่าไฟ (ยูนิค(บาท))' ),
+              labelText: ('ค่าไฟ (ยูนิค(บาท))'),
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
             ),
@@ -246,16 +266,34 @@ class _CalculationScreenState extends State<CalculationScreen> {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16),
-            _buildTravelInputField('รถบัส(ระยะทางต่อวัน(กิโลเมตร))', _busController, Icons.directions_bus),
-            _buildTravelInputField('แท็กซี่(ระยะทางต่อวัน(กิโลเมตร))', _taxiController, Icons.local_taxi),
-            _buildTravelInputField('รถยนต์ส่วนตัว[น้ำมันเบนซิน](ระยะทางต่อวัน(กิโลเมตร))', _carController1, Icons.directions_car),
-            _buildTravelInputField('รถยนต์ส่วนตัว[น้ำมันดีเซล](ระยะทางต่อวัน(กิโลเมตร))', _carController2, Icons.directions_car),
-            _buildTravelInputField('จักรยานยนต์(ระยะทางต่อวัน(กิโลเมตร))', _motorcycleController, Icons.motorcycle),
-            _buildTravelInputField('รถตู้(ระยะทางต่อวัน(กิโลเมตร))', _vanController, Icons.airport_shuttle),
-            _buildTravelInputField('รถไฟ(ระยะทางต่อวัน(กิโลเมตร))', _trainController, Icons.train),
-            _buildTravelInputField('เครื่องบิน บินในประเทศ(ระยะทางต่อวัน(กิโลเมตร))', _airplaneController1, Icons.flight),
-            _buildTravelInputField('เครื่องบิน บินต่างประเทศ(ระยะทางต่อวัน(กิโลเมตร))', _airplaneController2, Icons.flight),
-            _buildTravelInputField('เรือ(ระยะทางต่อวัน(กิโลเมตร))', _boatController, Icons.directions_boat),
+            _buildTravelInputField('รถบัส(ระยะทางต่อวัน(กิโลเมตร))',
+                _busController, Icons.directions_bus),
+            _buildTravelInputField('แท็กซี่(ระยะทางต่อวัน(กิโลเมตร))',
+                _taxiController, Icons.local_taxi),
+            _buildTravelInputField(
+                'รถยนต์ส่วนตัว[น้ำมันเบนซิน](ระยะทางต่อวัน(กิโลเมตร))',
+                _carController1,
+                Icons.directions_car),
+            _buildTravelInputField(
+                'รถยนต์ส่วนตัว[น้ำมันดีเซล](ระยะทางต่อวัน(กิโลเมตร))',
+                _carController2,
+                Icons.directions_car),
+            _buildTravelInputField('จักรยานยนต์(ระยะทางต่อวัน(กิโลเมตร))',
+                _motorcycleController, Icons.motorcycle),
+            _buildTravelInputField('รถตู้(ระยะทางต่อวัน(กิโลเมตร))',
+                _vanController, Icons.airport_shuttle),
+            _buildTravelInputField(
+                'รถไฟ(ระยะทางต่อวัน(กิโลเมตร))', _trainController, Icons.train),
+            _buildTravelInputField(
+                'เครื่องบิน บินในประเทศ(ระยะทางต่อวัน(กิโลเมตร))',
+                _airplaneController1,
+                Icons.flight),
+            _buildTravelInputField(
+                'เครื่องบิน บินต่างประเทศ(ระยะทางต่อวัน(กิโลเมตร))',
+                _airplaneController2,
+                Icons.flight),
+            _buildTravelInputField('เรือ(ระยะทางต่อวัน(กิโลเมตร))',
+                _boatController, Icons.directions_boat),
           ],
         ),
       ),
@@ -277,8 +315,9 @@ class _CalculationScreenState extends State<CalculationScreen> {
             controller: _daysController,
             keyboardType: TextInputType.number,
             inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')), // ใส่เฉพาะตัวเลขและจุดทศนิยม
-                      ],
+              FilteringTextInputFormatter.allow(
+                  RegExp(r'^\d+\.?\d{0,2}')), // ใส่เฉพาะตัวเลขและจุดทศนิยม
+            ],
             decoration: InputDecoration(
               labelText: 'อาหาร(มื้อ)',
               border: OutlineInputBorder(),
@@ -291,8 +330,9 @@ class _CalculationScreenState extends State<CalculationScreen> {
             controller: _beerController,
             keyboardType: TextInputType.number,
             inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')), // ใส่เฉพาะตัวเลขและจุดทศนิยม
-                      ],
+              FilteringTextInputFormatter.allow(
+                  RegExp(r'^\d+\.?\d{0,2}')), // ใส่เฉพาะตัวเลขและจุดทศนิยม
+            ],
             decoration: InputDecoration(
               labelText: 'เบียร์ (ขวด)',
               border: OutlineInputBorder(),
@@ -305,8 +345,9 @@ class _CalculationScreenState extends State<CalculationScreen> {
             controller: _coffeeController,
             keyboardType: TextInputType.number,
             inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')), // ใส่เฉพาะตัวเลขและจุดทศนิยม
-                      ],
+              FilteringTextInputFormatter.allow(
+                  RegExp(r'^\d+\.?\d{0,2}')), // ใส่เฉพาะตัวเลขและจุดทศนิยม
+            ],
             decoration: InputDecoration(
               labelText: 'กาแฟ (แก้ว)',
               border: OutlineInputBorder(),
@@ -319,8 +360,9 @@ class _CalculationScreenState extends State<CalculationScreen> {
             controller: _milkController,
             keyboardType: TextInputType.number,
             inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')), // ใส่เฉพาะตัวเลขและจุดทศนิยม
-                      ],
+              FilteringTextInputFormatter.allow(
+                  RegExp(r'^\d+\.?\d{0,2}')), // ใส่เฉพาะตัวเลขและจุดทศนิยม
+            ],
             decoration: InputDecoration(
               labelText: 'นม (แก้ว)',
               border: OutlineInputBorder(),
@@ -333,8 +375,9 @@ class _CalculationScreenState extends State<CalculationScreen> {
             controller: _fruitjuiceController,
             keyboardType: TextInputType.number,
             inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')), // ใส่เฉพาะตัวเลขและจุดทศนิยม
-                      ],
+              FilteringTextInputFormatter.allow(
+                  RegExp(r'^\d+\.?\d{0,2}')), // ใส่เฉพาะตัวเลขและจุดทศนิยม
+            ],
             decoration: InputDecoration(
               labelText: 'น้ำผลไม้ (แก้ว)',
               border: OutlineInputBorder(),
@@ -347,15 +390,17 @@ class _CalculationScreenState extends State<CalculationScreen> {
     );
   }
 
-  Widget _buildTravelInputField(String label, TextEditingController controller, [IconData? icon]) {
+  Widget _buildTravelInputField(String label, TextEditingController controller,
+      [IconData? icon]) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: TextField(
         controller: controller,
         keyboardType: TextInputType.number,
         inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')), // ใส่เฉพาะตัวเลขและจุดทศนิยม
-                      ],
+          FilteringTextInputFormatter.allow(
+              RegExp(r'^\d+\.?\d{0,2}')), // ใส่เฉพาะตัวเลขและจุดทศนิยม
+        ],
         decoration: InputDecoration(
           labelText: label,
           prefixIcon: icon != null ? Icon(icon) : null,
@@ -375,7 +420,6 @@ class _CalculationScreenState extends State<CalculationScreen> {
           margin: EdgeInsets.symmetric(horizontal: 4),
           width: _currentPage == index ? 12 : 8,
           height: 8,
-          
           decoration: BoxDecoration(
             color: _currentPage == index ? Colors.green[800] : Colors.grey,
             borderRadius: BorderRadius.circular(4),
@@ -390,7 +434,18 @@ class _CalculationScreenState extends State<CalculationScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         if (_currentPage > 0)
-          ElevatedButton(
+          ElevatedButton(style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.green,
+              side: BorderSide(
+                color: Colors.green, // สีของขอบปุ่ม
+                width: 2, // ความหนาของขอบ
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10), // ปรับขอบมน
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+            ),
             onPressed: () {
               _pageController.previousPage(
                 duration: Duration(milliseconds: 300),
@@ -402,15 +457,23 @@ class _CalculationScreenState extends State<CalculationScreen> {
         Spacer(),
         if (_currentPage == 2)
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.green,
+              side: BorderSide(
+                color: Colors.green, // สีของขอบปุ่ม
+                width: 2, // ความหนาของขอบ
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10), // ปรับขอบมน
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+            ),
             onPressed: () {
               _calculateAll(); // คำนวณทั้งหมด
               _navigateToStatistics(); // นำทางไปยังหน้าสถิติ
             },
             child: Text('คำนวณ'),
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: Colors.green[800],
-            ),
           )
         else if (_currentPage < 2)
           ElevatedButton(
@@ -420,6 +483,19 @@ class _CalculationScreenState extends State<CalculationScreen> {
                 curve: Curves.easeInOut,
               );
             },
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.green,
+              side: BorderSide(
+                color: Colors.green, // สีของขอบปุ่ม
+                width: 2, // ความหนาของขอบ
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10), // ปรับขอบมน
+              ),
+              padding: EdgeInsets.symmetric(
+                  horizontal: 45, vertical: 15), // เพิ่ม padding ในปุ่ม
+            ),
             child: Text('ถัดไป'),
           ),
       ],
