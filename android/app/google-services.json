@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "880409177492",
+    "project_id": "carbonapp-3cdd4",
+    "storage_bucket": "carbonapp-3cdd4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880409177492:android:9f4bcc219608091baaf381",
+        "android_client_info": {
+          "package_name": "com.example.canbonapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSOIMx5BcFX2V7CcuyGXjtJrQdT-m9zUU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
