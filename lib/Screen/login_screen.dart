@@ -103,11 +103,12 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Center(
           child: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
                   'CARBON FOOTPRINT CALCULATION FOR SUSTAINABILITY APPLICATION',
-                  style: Theme.of(context).textTheme.headlineMedium,
+                  style: TextStyle(fontSize: 22),
                 ),
                 const SizedBox(height: 20),
                 Form(
