@@ -2,7 +2,7 @@ import 'package:canbonapp/Screen/detail.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intl/intl.dart'; 
+import 'package:intl/intl.dart';
 
 class HistoryScreen extends StatefulWidget {
   @override
@@ -31,13 +31,20 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ประวัติการคำนวณ',style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 27,
-                    fontWeight: FontWeight.bold,),)
-      ),
+          title: Text(
+        'ประวัติการคำนวณ',
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 27,
+          fontWeight: FontWeight.bold,
+        ),
+      )),
       body: StreamBuilder<QuerySnapshot>(
-        stream: _firestore.collection('carbonCalculations').where('userId', isEqualTo: _auth.currentUser?.uid).orderBy('date', descending: true).snapshots(),
+        stream: _firestore
+            .collection('carbonCalculations')
+            .where('userId', isEqualTo: _auth.currentUser?.uid)
+            .orderBy('date', descending: true)
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -60,7 +67,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               // ตรวจสอบว่าข้อมูลเป็น Timestamp หรือไม่ก่อนเรียกใช้ toDate()
               DateTime date = (docData['date'] is Timestamp)
                   ? (docData['date'] as Timestamp).toDate()
-                  : DateTime.now();  
+                  : DateTime.now();
 
               // เรียกใช้ฟังก์ชัน formatDateTime
               String formattedDate = formatDateTime(date);
@@ -68,7 +75,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
               return Card(
                 margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 child: ListTile(
-                  title: Text('Total CO2: ${docData['totalCarbon Amount']} กก. CO2'),
+                  title: Text(
+                      'Total CO2: ${docData['totalCarbon Amount']} กก. CO2'),
                   subtitle: Text('Date: $formattedDate'),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -82,7 +90,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 title: Text('ยืนยันการลบ'),
-                                content: Text('คุณต้องการลบข้อมูลนี้ใช่หรือไม่?'),
+                                content:
+                                    Text('คุณต้องการลบข้อมูลนี้ใช่หรือไม่?'),
                                 actions: <Widget>[
                                   TextButton(
                                     child: Text('ยกเลิก'),
@@ -110,7 +119,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => DetailScreen(calculationData: docData),
+                        builder: (context) =>
+                            DetailScreen(calculationData: docData),
                       ),
                     );
                   },

@@ -50,6 +50,9 @@ dependencies:
   cloud_firestore: ^5.4.3
   flutter_dotenv: ^5.1.0
   intl: ^0.17.0
+  charts_flutter: ^0.12.0
+  share_plus: ^10.0.3
+  screenshot: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -68,7 +71,8 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   assets:
-    - assets/images/carbon_footprint.png
+    - assets/images/carbon_footprint1.png
+    - assets/images/default_profile.png
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

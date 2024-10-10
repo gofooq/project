@@ -1,12 +1,10 @@
 import 'dart:io';
-
 import 'package:canbonapp/Screen/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
 class PersonScreen extends StatefulWidget {
   @override
   _PersonScreenState createState() => _PersonScreenState();
@@ -15,7 +13,7 @@ class PersonScreen extends StatefulWidget {
 class _PersonScreenState extends State<PersonScreen> {
   String name = '';
   String email = '';
-  String profilePictureUrl = '';
+  String profilePictureUrl = ''; // Ensure this is used for displaying the image
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -27,7 +25,7 @@ class _PersonScreenState extends State<PersonScreen> {
   @override
   void initState() {
     super.initState();
-    _loadUserData();
+    _loadUserData(); // Load user data on initialization
   }
 
   void _loadUserData() async {
@@ -38,7 +36,7 @@ class _PersonScreenState extends State<PersonScreen> {
       setState(() {
         name = updatedUser?.displayName ?? '';
         email = updatedUser?.email ?? '';
-        profilePictureUrl = updatedUser?.photoURL ?? '';
+        profilePictureUrl = updatedUser?.photoURL ?? ''; // Load the profile picture URL
         nameController.text = name;
         emailController.text = email;
       });
@@ -56,11 +54,12 @@ class _PersonScreenState extends State<PersonScreen> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       try {
-        await user.updateProfile(
-            displayName: nameController.text, photoURL: profilePictureUrl);
-        await user.reload();
+        // Update Firebase Authentication user profile
+        await user.updateProfile(displayName: nameController.text, photoURL: profilePictureUrl);
+        await user.reload(); // Reload the user data after update
         final updatedUser = FirebaseAuth.instance.currentUser;
 
+        // Update Realtime Database with user info
         final userRef = databaseReference.child('users').child(user.uid);
         await userRef.update({
           'name': nameController.text,
@@ -71,10 +70,10 @@ class _PersonScreenState extends State<PersonScreen> {
         setState(() {
           name = updatedUser?.displayName ?? 'Unknown';
           email = updatedUser?.email ?? '';
-          profilePictureUrl = updatedUser?.photoURL ?? '';
+          profilePictureUrl = updatedUser?.photoURL ?? ''; // Make sure to set the updated photo URL
         });
 
-        Navigator.pop(context);
+        // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Profile updated successfully')),
         );
@@ -84,70 +83,28 @@ class _PersonScreenState extends State<PersonScreen> {
     }
   }
 
-  void _editProfile() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('แก้ไขโปรไฟล์'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage: profilePictureUrl.isNotEmpty
-                      ? NetworkImage(profilePictureUrl)
-                      : AssetImage('assets/default_profile.png')
-                          as ImageProvider,
-                ),
-                TextButton(
-                  onPressed: _pickImage,
-                  child: Text('เปลี่ยนรูปโปรไฟล์'),
-                ),
-                TextField(
-                  controller: nameController,
-                  decoration: InputDecoration(labelText: 'ชื่อ'),
-                ),
-                TextField(
-                  controller: emailController,
-                  decoration: InputDecoration(labelText: 'อีเมล'),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text('ยกเลิก'),
-            ),
-            ElevatedButton(
-              onPressed: _saveProfile,
-              child: Text('บันทึก'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   Future<void> _pickImage() async {
     try {
       final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
       if (pickedFile != null) {
         final file = File(pickedFile.path);
-        final bytes =
-            await file.readAsBytes(); // ใช้ readAsBytes แทน readAsBytesSync
-        final storageReference = FirebaseStorage.instance.ref().child(
-            'profile_pictures/${FirebaseAuth.instance.currentUser!.uid}');
-        final uploadTask =
-            storageReference.putData(bytes); // ส่งข้อมูลเป็น bytes
+        final storageReference = FirebaseStorage.instance
+            .ref()
+            .child('profile_pictures/${FirebaseAuth.instance.currentUser!.uid}');
+        
+        // Upload the file to Firebase Storage
+        final uploadTask = storageReference.putFile(file);
         final snapshot = await uploadTask.whenComplete(() {});
+        
+        // Get the download URL
         final downloadUrl = await snapshot.ref.getDownloadURL();
+
         setState(() {
-          profilePictureUrl = downloadUrl;
+          profilePictureUrl = downloadUrl; // Update the profile picture URL state
         });
+
+        // Call saveProfile to update Firebase Authentication with the new image URL
+        _saveProfile();
       }
     } catch (e) {
       print('Error picking or uploading image: $e');
@@ -158,7 +115,7 @@ class _PersonScreenState extends State<PersonScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('โปรไฟล์'),
+        title: Text('Profile'),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -173,8 +130,7 @@ class _PersonScreenState extends State<PersonScreen> {
                   radius: 50,
                   backgroundImage: profilePictureUrl.isNotEmpty
                       ? NetworkImage(profilePictureUrl)
-                      : AssetImage('assets/default_profile.png')
-                          as ImageProvider,
+                      : AssetImage('assets/images/default_profile.png') as ImageProvider,
                 ),
               ),
               SizedBox(height: 16),
@@ -199,7 +155,7 @@ class _PersonScreenState extends State<PersonScreen> {
               ),
               SizedBox(height: 32),
               Text(
-                'ข้อมูลผู้ใช้',
+                'User Information',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -209,17 +165,17 @@ class _PersonScreenState extends State<PersonScreen> {
               SizedBox(height: 16),
               ListTile(
                 leading: Icon(Icons.person, color: Colors.teal.shade400),
-                title: Text('ชื่อ'),
+                title: Text('Name'),
                 subtitle: Text(name),
               ),
               ListTile(
                 leading: Icon(Icons.email, color: Colors.teal.shade400),
-                title: Text('อีเมล'),
+                title: Text('Email'),
                 subtitle: Text(email),
               ),
               SizedBox(height: 32),
               Text(
-                'การตั้งค่าบัญชี',
+                'Account Settings',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -229,23 +185,23 @@ class _PersonScreenState extends State<PersonScreen> {
               SizedBox(height: 16),
               ListTile(
                 leading: Icon(Icons.edit, color: Colors.teal.shade400),
-                title: Text('แก้ไขโปรไฟล์'),
+                title: Text('Edit Profile'),
                 onTap: _editProfile,
               ),
               ListTile(
                 leading: Icon(Icons.security, color: Colors.teal.shade400),
-                title: Text('การตั้งค่าความปลอดภัย'),
+                title: Text('Security Settings'),
                 onTap: () {},
               ),
               ListTile(
                 leading: Icon(Icons.info, color: Colors.teal.shade400),
-                title: Text('เกี่ยวกับ'),
+                title: Text('About'),
                 onTap: () {},
               ),
               SizedBox(height: 32),
               ListTile(
                 leading: Icon(Icons.logout, color: Colors.red),
-                title: Text('ออกจากระบบ', style: TextStyle(color: Colors.red)),
+                title: Text('Logout', style: TextStyle(color: Colors.red)),
                 onTap: () {
                   _logout(context);
                 },
@@ -257,15 +213,57 @@ class _PersonScreenState extends State<PersonScreen> {
     );
   }
 
+  void _editProfile() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Edit Profile'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircleAvatar(
+                radius: 50,
+                backgroundImage: profilePictureUrl.isNotEmpty
+                    ? NetworkImage(profilePictureUrl)
+                    : AssetImage('assets/default_profile.png') as ImageProvider,
+              ),
+              TextButton(
+                onPressed: _pickImage,
+                child: Text('Change Profile Picture'),
+              ),
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(labelText: 'Name'),
+              ),
+              TextField(
+                controller: emailController,
+                decoration: InputDecoration(labelText: 'Email'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: _saveProfile,
+              child: Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _logout(BuildContext context) async {
-    try {
-      await FirebaseAuth.instance.signOut();
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
-      );
-    } catch (e) {
-      print('Error signing out: $e');
-    }
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginScreen()),
+    );
   }
 }

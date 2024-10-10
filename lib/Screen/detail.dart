@@ -9,7 +9,8 @@ class DetailScreen extends StatelessWidget {
 
   // ฟังก์ชันจัดการรูปแบบวันที่
   String formatDateTime(DateTime dateTime) {
-    return DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime); // ไม่ให้มี . ต่อท้ายเวลา
+    return DateFormat('yyyy-MM-dd HH:mm:ss')
+        .format(dateTime); // ไม่ให้มี . ต่อท้ายเวลา
   }
 
   @override
@@ -34,13 +35,17 @@ class DetailScreen extends StatelessWidget {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16),
-            Text('การใช้ไฟฟ้า: ${calculationData['electricityCarbon Amount']} กก. CO2'),
+            Text(
+                'การใช้ไฟฟ้า: ${calculationData['electricityCarbon Amount']} กก. CO2'),
             SizedBox(height: 8),
-            Text('การเดินทาง: ${calculationData['travelCarbon Amount']} กก. CO2'),
+            Text(
+                'การเดินทาง: ${calculationData['travelCarbon Amount']} กก. CO2'),
             SizedBox(height: 8),
-            Text('การบริโภคอาหาร: ${calculationData['foodCarbon Amount']} กก. CO2'),
+            Text(
+                'การบริโภคอาหาร: ${calculationData['foodCarbon Amount']} กก. CO2'),
             SizedBox(height: 8),
-            Text('คาร์บอนรวม: ${calculationData['totalCarbon Amount']} กก. CO2'),
+            Text(
+                'คาร์บอนรวม: ${calculationData['totalCarbon Amount']} กก. CO2'),
             SizedBox(height: 8),
             Text('วันที่: $formattedDate'), // ใช้วันที่ที่ถูกจัดรูปแบบแล้ว
           ],

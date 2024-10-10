@@ -122,11 +122,8 @@ class _CalculationScreenState extends State<CalculationScreen> {
     if (user != null) {
       try {
         double totalCarbon = (electricityCarbon) + travelCO2 + foodCO2;
-
         // DateTime now = DateTime.now();
-
         // String formattedTime = DateFormat('HH:mm').format(now);
-
         // สร้าง document ใหม่ใน Firestore
         await _firestore.collection('carbonCalculations').add({
           'userId': user.uid,
@@ -434,7 +431,8 @@ class _CalculationScreenState extends State<CalculationScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         if (_currentPage > 0)
-          ElevatedButton(style: ElevatedButton.styleFrom(
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
               backgroundColor: Colors.green,
               side: BorderSide(

@@ -30,15 +30,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<FirebaseApp> _initializeFirebase() async {
     return await Firebase.initializeApp(
-      // options: FirebaseOptions(
-      //   apiKey: 'AIzaSyDoSAA9PKZeIoxSHAUJN_W-kxWzWOMvFx0',
-      //   appId: '1:1080929298717:android:eb3c55339382645ddd99f4',
-      //   messagingSenderId: '1080929298717',
-      //   projectId: 'labb-88805',
-      //   databaseURL:'https://labb-88805-default-rtdb.firebaseio.com/',
-      //   storageBucket:'labb-88805.appspot.com',
-      // ),
-    );
+        // options: FirebaseOptions(
+        //   apiKey: 'AIzaSyDoSAA9PKZeIoxSHAUJN_W-kxWzWOMvFx0',
+        //   appId: '1:1080929298717:android:eb3c55339382645ddd99f4',
+        //   messagingSenderId: '1080929298717',
+        //   projectId: 'labb-88805',
+        //   databaseURL:'https://labb-88805-default-rtdb.firebaseio.com/',
+        //   storageBucket:'labb-88805.appspot.com',
+        // ),
+        );
   }
 
   void _loadSavedCredentials() async {

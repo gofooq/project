@@ -37,7 +37,8 @@ class _CarbonCreditScreenState extends State<CarbonCreditScreen> {
         totalCO2Seq += co2seq; // เพิ่มค่า CO2 ของแต่ละต้นไปยังผลรวม
       }
 
-      _canboncreditResult = 'คาร์บอนเครดิตรวม ${totalCO2Seq.toStringAsFixed(2)} กก. CO2eq';
+      _canboncreditResult =
+          'คาร์บอนเครดิตรวม ${totalCO2Seq.toStringAsFixed(2)} กก. CO2eq';
       _saveDataToFirebase(totalCO2Seq); // บันทึกผลรวมใน Firestore
     });
   }
@@ -138,7 +139,8 @@ class _CarbonCreditScreenState extends State<CarbonCreditScreen> {
                     TextField(
                       keyboardType: TextInputType.number,
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')), // ใส่เฉพาะตัวเลขและจุดทศนิยม
+                        FilteringTextInputFormatter.allow(RegExp(
+                            r'^\d+\.?\d{0,2}')), // ใส่เฉพาะตัวเลขและจุดทศนิยม
                       ],
                       decoration: InputDecoration(
                         labelText: 'เส้นผ่านศูนย์กลาง(ซม.)',
@@ -152,7 +154,8 @@ class _CarbonCreditScreenState extends State<CarbonCreditScreen> {
                     TextField(
                       keyboardType: TextInputType.number,
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')), // ใส่เฉพาะตัวเลขและจุดทศนิยม
+                        FilteringTextInputFormatter.allow(RegExp(
+                            r'^\d+\.?\d{0,2}')), // ใส่เฉพาะตัวเลขและจุดทศนิยม
                       ],
                       decoration: InputDecoration(
                         labelText: 'ความสูง (ม.)',
@@ -189,7 +192,8 @@ class _CarbonCreditScreenState extends State<CarbonCreditScreen> {
           ),
         Spacer(),
         if (_currentPage == 0)
-          ElevatedButton(style: ElevatedButton.styleFrom(
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
               foregroundColor: Colors.white,
               backgroundColor: Colors.green,
               side: BorderSide(
@@ -206,7 +210,6 @@ class _CarbonCreditScreenState extends State<CarbonCreditScreen> {
               _navigateToStatistics(); // นำทางไปยังหน้าสถิติ
             },
             child: Text('คำนวณ'),
-    
           )
       ],
     );

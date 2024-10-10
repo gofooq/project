@@ -10,7 +10,8 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-void main() async{
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Firebase.initializeApp();
   runApp(const MyApp());
@@ -46,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int index = 0;
   final List<Widget> _pages = [
     HomeScreen(),
-    Graphscreen(),
+    TotalCarbonChart1(),
     HistoryScreen(),
     CarbonFootprintKnowledgeScreen(),
     PersonScreen(),
@@ -121,11 +122,12 @@ class NavigationDrawer extends StatelessWidget {
         final user = snapshot.data;
         final userName = user?.displayName ?? 'Guest';
         final userEmail = user?.email ?? 'example@example.com';
+        final profilePictureUrl = user?.photoURL; // Get the user's profile picture URL
 
         return Drawer(
           child: Column(
             children: [
-              buildHeader(context, userName, userEmail),
+              buildHeader(context, userName, userEmail, profilePictureUrl),
               Expanded(child: buildMenuItems(context)),
             ],
           ),
@@ -134,7 +136,7 @@ class NavigationDrawer extends StatelessWidget {
     );
   }
 
-  Widget buildHeader(BuildContext context, String userName, String userEmail) =>
+  Widget buildHeader(BuildContext context, String userName, String userEmail, String? profilePictureUrl) =>
       Container(
         color: const Color.fromARGB(255, 0, 128, 55),
         padding: EdgeInsets.only(
@@ -147,8 +149,9 @@ class NavigationDrawer extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 50,
-                backgroundImage:
-                    NetworkImage('https://www.example.com/default_profile.png'),
+                backgroundImage: profilePictureUrl != null && profilePictureUrl.isNotEmpty
+                    ? NetworkImage(profilePictureUrl)
+                    : AssetImage('assets/default_profile.png') as ImageProvider,
               ),
               const SizedBox(height: 8),
               Text(
@@ -188,8 +191,8 @@ class NavigationDrawer extends StatelessWidget {
               icon: Icons.history,
               text: 'ประวัติการคำนวณ',
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => HistoryScreen()));
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => HistoryScreen()));
               },
             ),
             buildMenuItem(
@@ -246,130 +249,7 @@ class NavigationDrawer extends StatelessWidget {
   }
 }
 
-// class HomeScreen extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     final screenWidth = MediaQuery.of(context).size.width;
-//     return Scaffold(
-//       appBar: AppBar(
-//         elevation: 0,
-//         backgroundColor: Colors.white,
-//         centerTitle: true,
-//       ),
-//       body: Container(
-//         decoration: BoxDecoration(
-//           gradient: LinearGradient(
-//             begin: Alignment.topLeft,
-//             end: Alignment.bottomRight,
-//             colors: [
-//               Colors.white,
-//               Colors.grey.shade200,
-//             ],
-//           ),
-//         ),
-//         child: Padding(
-//           padding: const EdgeInsets.all(10),
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.center,
-//             mainAxisAlignment: MainAxisAlignment.start,
-//             children: [
-//               Text(
-//                 'ยินดีต้อนรับสู่ Carbon Footprint',
-//                 style: TextStyle(
-//                   color: Colors.black87,
-//                   fontSize: 24,
-//                   fontWeight: FontWeight.bold,
-//                 ),
-//               ),
-//               SizedBox(height: 18),
-//               Text(
-//                 'สำรวจและจัดการคาร์บอนฟุตพรินต์ของคุณ',
-//                 style: TextStyle(
-//                   color: Colors.grey[600],
-//                   fontSize: 18,
-//                 ),
-//               ),
-//               SizedBox(height: 32),
-//               Expanded(
-//                 child: GridView.count(
-//                   crossAxisCount: 2,
-//                   crossAxisSpacing: 8,
-//                   mainAxisSpacing: 8,
-//                   childAspectRatio: (screenWidth / 2) / ((screenWidth / 2) *1.4),
-//                   children: [
-//                     _buildFeatureCard(
-//                       context,
-//                       icon: Icons.calculate_outlined,
-//                       title: 'คำนวณการปล่อยคาร์บอน',
-//                       color: Colors.green.shade400,
-//                       page: CalculationScreen(),
-//                     ),
-//                     _buildFeatureCard(
-//                       context,
-//                       icon: Icons.history,
-//                       title: 'ประวัติการคำนวณ',
-//                       color: Colors.blue.shade400,
-//                       page: HistoryScreen(),
-//                     ),
-//                     _buildFeatureCard(
-//                       context,
-//                       icon: Icons.energy_savings_leaf,
-//                       title: 'คำนวณเครดิตคาร์บอน',
-//                       color: Colors.orange.shade400,
-//                       page: CarbonCreditScreen(),
-//                     ),
-//                     _buildFeatureCard(
-//                       context,
-//                       icon: Icons.book_outlined,
-//                       title: 'ความรู้คาร์บอน',
-//                       color: Colors.red.shade400,
-//                       page: CarbonFootprintKnowledgeScreen(),
-//                     ),
-//                   ]
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
 
-//   Widget _buildFeatureCard(BuildContext context,
-//       {required IconData icon,
-//       required String title,
-//       required Color color,
-//       required Widget page}) {
-//     return GestureDetector(
-//       onTap: () {
-//         Navigator.push(
-//           context,
-//           MaterialPageRoute(builder: (context) => page),
-//         );
-//       },
-//       child: Card(
-//         color: color,
-//         elevation: 4,
-//         shape: RoundedRectangleBorder(
-//           borderRadius: BorderRadius.circular(10),
-//         ),
-//         child: Center(
-//           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             children: [
-//               Icon(icon, size: 40, color: Colors.white),
-//               SizedBox(height: 10),
-//               Text(
-//                 title,
-//                 style: TextStyle(color: Colors.white, fontSize: 16),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -380,7 +260,7 @@ class HomeScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             width: double.infinity,
-            color: const Color.fromARGB(255, 255, 255, 255), 
+            color: const Color.fromARGB(255, 255, 255, 255),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -427,7 +307,8 @@ class HomeScreen extends StatelessWidget {
                         crossAxisCount: 2,
                         crossAxisSpacing: 8,
                         mainAxisSpacing: 8,
-                        childAspectRatio: (screenWidth / 2) / ((screenWidth / 2) * 1.5),
+                        childAspectRatio:
+                            (screenWidth / 2) / ((screenWidth / 2) * 1.5),
                         children: [
                           _buildFeatureCard(
                             context,
