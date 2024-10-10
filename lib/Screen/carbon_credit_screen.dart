@@ -108,7 +108,7 @@ class _CarbonCreditScreenState extends State<CarbonCreditScreen> {
           SizedBox(height: 16),
           DropdownButton<int>(
             value: _numberOfTrees,
-            items: List.generate(10, (index) => index + 1)
+            items: List.generate(20, (index) => index + 1)
                 .map((number) => DropdownMenuItem(
                       value: number,
                       child: Text(number.toString()),
