@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // ใช้สำหรับจัดการรูปแบบวันที่
 
-class CarbonFootprintDetailScreen extends StatelessWidget {
+class CarbonCreditDetailScreen extends StatelessWidget {
   final Map<String, dynamic> calculationData;
 
-  CarbonFootprintDetailScreen({required this.calculationData});
+  CarbonCreditDetailScreen({required this.calculationData});
 
   // ฟังก์ชันจัดการรูปแบบวันที่
   String formatDateTime(DateTime dateTime) {
@@ -22,7 +22,7 @@ class CarbonFootprintDetailScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('รายละเอียดการคำนวณคาร์บอนฟุตพรินต์'),
+        title: Text('รายละเอียดการคำนวณคาร์บอนเครดิต'),
         backgroundColor: Colors.green[700], // Nature-themed color
       ),
       body: Center( // Centering the content
@@ -35,22 +35,16 @@ class CarbonFootprintDetailScreen extends StatelessWidget {
             ),
             color: Colors.green[50], // Light green background for the card
             child: Padding(
-              padding: const EdgeInsets.all(60.0),
+              padding: const EdgeInsets.all(70),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'รายละเอียดการคำนวณ',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.green[900]),
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.green[900]),
                   ),
                   SizedBox(height: 16),
-                  Text('การใช้ไฟฟ้า: ${calculationData['electricityCarbon Amount'] ?? 0.0} กก. CO2'),
-                  SizedBox(height: 8),
-                  Text('การเดินทาง: ${calculationData['travelCarbon Amount'] ?? 0.0} กก. CO2'),
-                  SizedBox(height: 8),
-                  Text('การบริโภคอาหาร: ${calculationData['foodCarbon Amount'] ?? 0.0} กก. CO2'),
-                  SizedBox(height: 8),
-                  Text('คาร์บอนรวม: ${calculationData['totalCarbon Amount'] ?? 0.0} กก. CO2'),
+                  Text('คาร์บอนเครดิต: ${calculationData['carboncredit'] ?? 0.0} กก. CO2eq'),
                   SizedBox(height: 8),
                   Text('วันที่: $formattedDate', style: TextStyle(color: Colors.grey[700])),
                 ],
@@ -62,3 +56,4 @@ class CarbonFootprintDetailScreen extends StatelessWidget {
     );
   }
 }
+

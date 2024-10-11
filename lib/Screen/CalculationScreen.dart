@@ -159,6 +159,7 @@ class _CalculationScreenState extends State<CalculationScreen> {
 
   void _navigateToStatistics() {
     print('Navigating to statistics...');
+    // ignore: unused_local_variable
     Map<String, String> results = {
       'การใช้ไฟฟ้า': _electricityResult,
       'การเดินทาง': _travelResult,
@@ -168,7 +169,7 @@ class _CalculationScreenState extends State<CalculationScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CarbonPage(results: results),
+        builder: (context) => CarbonFootprintDetailScreen(calculationData: {},),
       ),
     );
   }

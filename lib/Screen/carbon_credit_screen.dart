@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:canbonapp/page/carbon_page.dart';
+import 'package:canbonapp/page/carboncredit_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -55,13 +55,14 @@ class _CarbonCreditScreenState extends State<CarbonCreditScreen> {
   }
 
   void _navigateToStatistics() {
+    // ignore: unused_local_variable
     Map<String, String> results = {
       'คาร์บอนเครดิต': _canboncreditResult,
     };
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CarbonPage(results: results),
+        builder: (context) => CarbonCreditDetailScreen(calculationData: {},),
       ),
     );
   }

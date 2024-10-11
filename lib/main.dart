@@ -5,7 +5,7 @@ import 'package:canbonapp/Screen/PersonScreen.dart';
 import 'package:canbonapp/Screen/carbon_credit_screen.dart';
 import 'package:canbonapp/Screen/graphscreen.dart';
 import 'package:canbonapp/Screen/login_screen.dart';
-import 'package:canbonapp/Screen/notifications_screen.dart';
+// import 'package:canbonapp/Screen/notifications_screen.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -60,16 +60,16 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.green[800],
         title: const Text(''),
         actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NotificationsScreen()),
-              );
-            },
-            icon: const Icon(Icons.notifications,
-                color: Color.fromARGB(255, 255, 255, 255)),
-          ),
+          // IconButton(
+          //   onPressed: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => NotificationsScreen()),
+          //     );
+          //   },
+          //   icon: const Icon(Icons.notifications,
+          //       color: Color.fromARGB(255, 255, 255, 255)),
+          // ),
         ],
       ),
       drawer: const NavigationDrawer(),
@@ -223,15 +223,15 @@ class NavigationDrawer extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => PersonScreen()));
               },
             ),
-            buildMenuItem(
-              context,
-              icon: Icons.notifications,
-              text: 'Notifications',
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => NotificationsScreen()));
-              },
-            ),
+            // buildMenuItem(
+            //   context,
+            //   icon: Icons.notifications,
+            //   text: 'Notifications',
+            //   onTap: () {
+            //     Navigator.of(context).push(MaterialPageRoute(
+            //         builder: (context) => NotificationsScreen()));
+            //   },
+            // ),
           ],
         ),
       );
